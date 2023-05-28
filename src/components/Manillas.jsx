@@ -40,7 +40,7 @@ const Manillas = () => {
                     <li class="list-group-item"><h5>Material</h5><span>Cuero</span></li>
                     <li class="list-group-item"><h5>Dije</h5><span>Martillo</span></li>
                     <li class="list-group-item"><h5>Tipo</h5><span>Plata</span></li>
-                    <li class="list-group-item"><h5>Canitdad</h5><span>1</span></li>
+                    <li class="list-group-item"><h5>Cantidad</h5><span>1</span></li>
                     <li class="list-group-item"><h5>Precio</h5><span>$80</span></li>
                     <li class="list-group-item"><h5>Total</h5><span>$80</span></li>
                     <button class="btn btn-danger">Eliminar</button>
