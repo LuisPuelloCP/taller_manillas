@@ -83,7 +83,6 @@ const Manillas = () => {
         console.log(suma);
     }
     
-
     // Agregando item al carrito
     const agregarCarrito = (e) => {
         e.preventDefault();
