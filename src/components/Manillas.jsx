@@ -11,7 +11,9 @@ const Manillas = () => {
     const [material, setMaterial] = useState('')
     const [dije, setDije] = useState('')
     const [tipo_dije, setTipoDije] = useState('')
+    const [cliente, setCliente] = useState('')
     const [cantidad, setCantidad] = useState(1)
+    const [totalConversion, setTotalConversion] = useState(0)
 
 
     //Trayendo configuraciones
@@ -71,13 +73,21 @@ const Manillas = () => {
         obtenerTipoDijes();
     },[])
     
-
-
+    // Realizando conversion
+    const total = () => {
+        let suma = 0;
+        listCarrito.forEach(element => {
+            suma = suma + element.total * 5000
+        });
+        setTotalConversion(suma);
+        console.log(suma);
+    }
+    
 
     // Agregando item al carrito
     const agregarCarrito = (e) => {
         e.preventDefault();
-        if (material != "" && dije != "" && tipo_dije != "") {
+        if (material != "" && dije != "" && tipo_dije != "" && cantidad > 0) {
             const rep = listCarrito.find((item) => item.material == material && item.dije == dije && item.tipo_dije == tipo_dije)
             if (rep) {
                 rep.cantidad += cantidad ;
@@ -91,7 +101,6 @@ const Manillas = () => {
                     precio = item.valor
                 }
             });
-            
             setListCarrito([...listCarrito, {
                 "material": material,
                 "dije": dije,
@@ -102,6 +111,8 @@ const Manillas = () => {
             }]);
         }
     }
+
+
 
   return (
     <div className="container mt-5">
@@ -136,7 +147,7 @@ const Manillas = () => {
                             ))
                         }
                     </select>
-                    <input type="text" className="form-control mb-2" placeholder='Ingrese la cantidad' value={cantidad} onChange={(e) =>setCantidad(e.target.value)}/>
+                    <input type="number" className="form-control mb-2" placeholder='Ingrese la cantidad' value={cantidad} onChange={(e) =>setCantidad(e.target.value)}/>
                     <button className="btn btn-primary">Agregar al carrito</button>
                 </div>
             </form>
@@ -153,13 +164,14 @@ const Manillas = () => {
                                 <li className="list-group-item"><h5>Cantidad</h5><span>{item.cantidad}</span></li>
                                 <li className="list-group-item"><h5>Precio</h5><span>${item.precio}</span></li>
                                 <li className="list-group-item"><h5>Total</h5><span>${item.total}</span></li>
-                                <button className="btn btn-danger">Eliminar</button>
+                                <button className="btn btn-danger mx-1">Eliminar</button>
                             </ul>
                         ))
                     }                    
-                <input type="number" className="form-control mb-2" placeholder='Ingrese Nombre del cliente'/>
-                <h4>Total con cambio de moneda: {}</h4>
-                <button className="btn btn-primary">Pagar</button>
+                <input type="text" className="form-control mb-2" placeholder='Ingrese Nombre del cliente' value={cliente} onChange={(e) =>setCliente(e.target.value)}/>
+                <h4>Total con cambio de moneda: {totalConversion}</h4>
+                <button className="btn btn-info mx-2" onClick={()=>total()}>Realizar total con cambio de moneda</button>
+                <button className="btn btn-success mx-2">Pagar</button>
             </form>
             
         </div>
