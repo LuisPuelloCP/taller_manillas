@@ -11,7 +11,7 @@ const Manillas = () => {
     const [material, setMaterial] = useState('')
     const [dije, setDije] = useState('')
     const [tipo_dije, setTipoDije] = useState('')
-    const [cantidad, setCantidad] = useState(0)
+    const [cantidad, setCantidad] = useState(1)
 
 
     //Trayendo configuraciones
@@ -72,24 +72,35 @@ const Manillas = () => {
     },[])
     
 
+
+
+    // Agregando item al carrito
     const agregarCarrito = (e) => {
         e.preventDefault();
-        let precio = 0;
-        listaConf.forEach(item => {
-            if(item.material === material && item.dije === dije && item.tipo_dije === tipo_dije){
-                precio = item.valor
+        if (material != "" && dije != "" && tipo_dije != "") {
+            const rep = listCarrito.find((item) => item.material == material && item.dije == dije && item.tipo_dije == tipo_dije)
+            if (rep) {
+                rep.cantidad += cantidad ;
+                rep.total = rep.cantidad * rep.precio;
+                setListCarrito([...listCarrito])
+                return
             }
-        });
-        
-        console.log("precio ", precio);
-        setListCarrito([{
-            "material": material,
-            "dije": dije,
-            "tipo_dije": tipo_dije,
-            "cantidad": cantidad,
-            "precio": precio,
-            "total": cantidad*precio
-        }]);
+            let precio = 0;
+            listaConf.forEach(item => {
+                if(item.material === material && item.dije === dije && item.tipo_dije === tipo_dije){
+                    precio = item.valor
+                }
+            });
+            
+            setListCarrito([...listCarrito, {
+                "material": material,
+                "dije": dije,
+                "tipo_dije": tipo_dije,
+                "cantidad": cantidad,
+                "precio": precio,
+                "total": cantidad*precio
+            }]);
+        }
     }
 
   return (
