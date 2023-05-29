@@ -1,6 +1,8 @@
+import swal from 'sweetalert';
 import React, { useEffect, useState } from "react";
 import { db } from '../firebase'
 import { collection, doc, addDoc, onSnapshot, deleteDoc, updateDoc } from 'firebase/firestore'
+
 
 const Manillas = () => {
     const [listaConf, setListaConf] = useState([]);
@@ -73,14 +75,22 @@ const Manillas = () => {
         obtenerTipoDijes();
     },[])
     
-    // Realizando conversion
-    const total = () => {
+    // Realizando conversion a peso
+    const totalPeso = () => {
         let suma = 0;
         listCarrito.forEach(element => {
             suma = suma + element.total * 5000
         });
         setTotalConversion(suma);
-        console.log(suma);
+    }
+
+    // Realizando conversion a dolar
+    const total = () => {
+        let suma = 0;
+        listCarrito.forEach(element => {
+            suma = suma + element.total
+        });
+        setTotalConversion(suma);
     }
 
     // guardar manillas creadas en db
@@ -91,7 +101,19 @@ const Manillas = () => {
                 cliente: cliente,
                 pago_total: totalConversion
             })
-            alert("Pago exitoso")
+            swal({
+                title: "Pago Exitoso",
+                text: "Su pago fue guardado en la base de datos",
+                icon: "success",
+                button: "Continuar",
+              });
+              setCliente("")
+              setMaterial("")
+              setDije("")
+              setTipoDije("")
+              setListCarrito([])
+              setTotalConversion(0)
+
         } catch (error) {
             console.log(error);
         }
@@ -111,7 +133,7 @@ const Manillas = () => {
         if (material != "" && dije != "" && tipo_dije != "" && cantidad > 0) {
             const rep = listCarrito.find((item) => item.material == material && item.dije == dije && item.tipo_dije == tipo_dije)
             if (rep) {
-                rep.cantidad += cantidad ;
+                rep.cantidad += Number(cantidad)  ;
                 rep.total = rep.cantidad * rep.precio;
                 setListCarrito([...listCarrito])
                 return
@@ -131,7 +153,7 @@ const Manillas = () => {
                 "material": material,
                 "dije": dije,
                 "tipo_dije": tipo_dije,
-                "cantidad": cantidad,
+                "cantidad": Number(cantidad),
                 "precio": precio,
                 "total": cantidad*precio
             }]);
@@ -194,8 +216,9 @@ const Manillas = () => {
                     ))
                 }                    
             <input type="text" className="form-control mb-2" placeholder='Ingrese cedula del cliente' value={cliente} onChange={(e) =>setCliente(e.target.value)}/>
-            <h4>Total con cambio de moneda: {totalConversion}</h4>
-            <button className="btn btn-info mx-2" onClick={()=>total()}>Realizar total con cambio de moneda</button>
+            <h4>Total con cambio de moneda: {new Intl.NumberFormat().format(totalConversion)}</h4>
+            <button className="btn btn-info mx-2" onClick={()=>total()}>Total en dolares</button>
+            <button className="btn btn-info mx-2" onClick={()=>totalPeso()}>Total en peso</button>
             {
                 totalConversion == "" || totalConversion == null  || cliente == "" ? (
                     <button className="btn btn-success mx-2" disabled onClick={()=>pagar()}>Pagar</button>
