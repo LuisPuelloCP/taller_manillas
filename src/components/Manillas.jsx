@@ -82,6 +82,20 @@ const Manillas = () => {
         setTotalConversion(suma);
         console.log(suma);
     }
+
+    // guardar manillas creadas en db
+     const pagar = async () => {
+        try {
+            const data = await addDoc(collection (db, 'comprado'),{
+                manillas: listCarrito,
+                cliente: cliente,
+                pago_total: totalConversion
+            })
+            alert("Pago exitoso")
+        } catch (error) {
+            console.log(error);
+        }
+     }
     
     // Agregando item al carrito
     const agregarCarrito = (e) => {
@@ -153,25 +167,29 @@ const Manillas = () => {
         </div>
         <div className="col-7">
             <h4 className="text-center">Carrito</h4>
-            <form action="##">
-                    {
-                        listCarrito.map(item => (
-                            <ul className="list-group list-group-horizontal text-center mb-2" key={item.id}>
-                                <li className="list-group-item"><h5>Material</h5><span>{item.material}</span></li>
-                                <li className="list-group-item"><h5>Dije</h5><span>{item.dije}</span></li>
-                                <li className="list-group-item"><h5>Tipo</h5><span>{item.tipo_dije}</span></li>
-                                <li className="list-group-item"><h5>Cantidad</h5><span>{item.cantidad}</span></li>
-                                <li className="list-group-item"><h5>Precio</h5><span>${item.precio}</span></li>
-                                <li className="list-group-item"><h5>Total</h5><span>${item.total}</span></li>
-                                <button className="btn btn-danger mx-1">Eliminar</button>
-                            </ul>
-                        ))
-                    }                    
-                <input type="text" className="form-control mb-2" placeholder='Ingrese Nombre del cliente' value={cliente} onChange={(e) =>setCliente(e.target.value)}/>
-                <h4>Total con cambio de moneda: {totalConversion}</h4>
-                <button className="btn btn-info mx-2" onClick={()=>total()}>Realizar total con cambio de moneda</button>
-                <button className="btn btn-success mx-2">Pagar</button>
-            </form>
+                {
+                    listCarrito.map(item => (
+                        <ul className="list-group list-group-horizontal text-center mb-2" key={item.id}>
+                            <li className="list-group-item"><h5>Material</h5><span>{item.material}</span></li>
+                            <li className="list-group-item"><h5>Dije</h5><span>{item.dije}</span></li>
+                            <li className="list-group-item"><h5>Tipo</h5><span>{item.tipo_dije}</span></li>
+                            <li className="list-group-item"><h5>Cantidad</h5><span>{item.cantidad}</span></li>
+                            <li className="list-group-item"><h5>Precio</h5><span>${item.precio}</span></li>
+                            <li className="list-group-item"><h5>Total</h5><span>${item.total}</span></li>
+                            <button className="btn btn-danger mx-1">Eliminar</button>
+                        </ul>
+                    ))
+                }                    
+            <input type="text" className="form-control mb-2" placeholder='Ingrese cedula del cliente' value={cliente} onChange={(e) =>setCliente(e.target.value)}/>
+            <h4>Total con cambio de moneda: {totalConversion}</h4>
+            <button className="btn btn-info mx-2" onClick={()=>total()}>Realizar total con cambio de moneda</button>
+            {
+                totalConversion == "" || totalConversion == null  || cliente == "" ? (
+                    <button className="btn btn-success mx-2" disabled onClick={()=>pagar()}>Pagar</button>
+                    )
+                    :
+                    <button className="btn btn-success mx-2" onClick={()=>pagar()}>Pagar</button>
+            }
             
         </div>
       </div>
