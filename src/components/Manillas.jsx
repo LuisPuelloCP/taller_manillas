@@ -97,6 +97,14 @@ const Manillas = () => {
         }
      }
     
+
+    //Eliminar item
+
+    const eliminarItem = (itemId) => {
+        const carritoActulizado = listCarrito.filter((manilla) => manilla.id !== itemId)
+        setListCarrito(carritoActulizado)
+    }
+
     // Agregando item al carrito
     const agregarCarrito = (e) => {
         e.preventDefault();
@@ -114,7 +122,12 @@ const Manillas = () => {
                     precio = item.valor
                 }
             });
+            
+            const manilla = listaConf.filter((config) => {
+                return (config.material == material && config.dije == dije && config.tipo_dije && config.valor == precio)
+            })
             setListCarrito([...listCarrito, {
+                "id": manilla[0].id,
                 "material": material,
                 "dije": dije,
                 "tipo_dije": tipo_dije,
@@ -176,7 +189,7 @@ const Manillas = () => {
                             <li className="list-group-item"><h5>Cantidad</h5><span>{item.cantidad}</span></li>
                             <li className="list-group-item"><h5>Precio</h5><span>${item.precio}</span></li>
                             <li className="list-group-item"><h5>Total</h5><span>${item.total}</span></li>
-                            <button className="btn btn-danger mx-1">Eliminar</button>
+                            <button className="btn btn-danger mx-1" onClick={()=>eliminarItem(item.id)} >Eliminar</button>
                         </ul>
                     ))
                 }                    
